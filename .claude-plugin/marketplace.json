@@ -7,8 +7,8 @@
   },
   "plugins": [
     {
-      "name": "refiner",
-      "source": "./refiner",
+      "name": "trelol",
+      "source": "./trelol",
       "category": "productivity",
       "description": "Refine sprint Doing cards into structured specs + implementation checklists, with a human-in-the-loop ambiguity gate."
     }

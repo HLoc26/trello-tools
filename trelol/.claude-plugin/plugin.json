@@ -1,8 +1,8 @@
 {
     "$schema": "https://anthropic.com/claude-code/plugin.schema.json",
-    "name": "refiner",
-    "version": "0.1.2",
-    "description": "Sprint-task refiner for Trello. Turns Doing cards into specs + checklists.",
+    "name": "trelol",
+    "version": "0.2.0",
+    "description": "Trello sprint tools: refine cards into specs + checklists, then implement them with live checklist progress.",
     "author": {
         "name": "hloc"
     },
