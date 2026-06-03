@@ -1,0 +1,16 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "trello-tools",
+  "description": "Team tools for Trello-driven sprint work on Claude Code.",
+  "owner": {
+    "name": "hloc"
+  },
+  "plugins": [
+    {
+      "name": "refiner",
+      "source": "./refiner",
+      "category": "productivity",
+      "description": "Refine sprint Doing cards into structured specs + implementation checklists, with a human-in-the-loop ambiguity gate."
+    }
+  ]
+}

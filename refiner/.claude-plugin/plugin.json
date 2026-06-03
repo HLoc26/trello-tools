@@ -1,0 +1,21 @@
+{
+    "$schema": "https://anthropic.com/claude-code/plugin.schema.json",
+    "name": "refiner",
+    "version": "0.1.0",
+    "description": "Sprint-task refiner for Trello. Turns Doing cards into specs + checklists.",
+    "author": {
+        "name": "hloc"
+    },
+    "userConfig": {
+        "trelloApiKey": {
+            "type": "string",
+            "title": "Trello API key",
+            "description": "Trello API key from https://trello.com/app-key"
+        },
+        "trelloToken": {
+            "type": "string",
+            "title": "Trello token",
+            "description": "Trello API token"
+        }
+    }
+}
