@@ -3,8 +3,8 @@
     "command": "npx",
     "args": ["-y", "@hloc/trello-mcp-server"],
     "env": {
-      "TRELLO_API_KEY": "${trelloApiKey}",
-      "TRELLO_API_TOKEN": "${trelloToken}"
+      "TRELLO_API_KEY": "${user_config.trelloApiKey}",
+      "TRELLO_API_TOKEN": "${user_config.trelloToken}"
     }
   }
 }
