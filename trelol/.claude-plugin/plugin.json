@@ -1,7 +1,7 @@
 {
     "$schema": "https://anthropic.com/claude-code/plugin.schema.json",
     "name": "trelol",
-    "version": "0.2.0",
+    "version": "0.3.0",
     "description": "Trello sprint tools: refine cards into specs + checklists, then implement them with live checklist progress.",
     "author": {
         "name": "hloc"

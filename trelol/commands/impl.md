@@ -13,6 +13,12 @@ Target card: `$1`. Optional spec file: `$2`.
 
 ## Setup
 
+0. Ground yourself — you have no memory of previous sessions:
+   - Read `specs/decisions.md` if it exists (the project's decision ledger from
+     past refine/impl runs). Honor every entry; never contradict or re-ask what
+     it already answers.
+   - Skim `CLAUDE.md`/`README.md` and the codebase areas the card touches so
+     your changes follow existing patterns.
 1. Call `trello_get_card` for `$1` with checklists included. Read the
    description and find the checklist named "Implementation" (if missing, call
    `trello_list_checklists`; if still missing, STOP and tell me to run
@@ -46,6 +52,9 @@ Rules:
   silently.
 - If a step turns out to need splitting, add the sub-items to the checklist
   (`trello_add_check_item`) so the board reflects reality, then proceed.
+- When you make a non-obvious implementation choice (a library, a pattern, a
+  trade-off), or I answer a question for you, append it to `specs/decisions.md`
+  (same ledger `/trelol:refine` uses) so the next session inherits it.
 
 ## Wrap-up
 
