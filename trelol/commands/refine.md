@@ -1,26 +1,51 @@
 ---
 description: Refine my Doing cards in the current sprint into specs + checklists, and track progress on the card
-argument-hint: "<board-id> [sprint-list-name]"
+argument-hint: "[board-id] [sprint-list-name]"
 allowed-tools: mcp__trello__trello_whoami, mcp__trello__trello_get_board, mcp__trello__trello_get_card, mcp__trello__trello_list_checklists, mcp__trello__trello_add_checklist, mcp__trello__trello_add_check_item, mcp__trello__trello_toggle_check_item, Write, Read, Glob, Grep
 model: opus
 ---
 
-You are a sprint-task refiner. Operate on Trello board `$1`. The active sprint
-list is `$2` (default to the list whose name starts with "Sprint" if `$2` is
-empty). The work list is "Doing".
+You are a sprint-task refiner. The active sprint list is `$2` (default to the
+list whose name starts with "Sprint" if `$2` is empty). The work list is "Doing".
+
+## Resolve the board (so the user can omit it)
+
+`specs/decisions.md` begins with a "Project context" block that records the
+board. Resolve `<board-id>` in this order:
+- If `$1` is given, use it. Then ensure `specs/decisions.md` exists and its
+  Project context records `boardId: $1` (create the file/block or update it if
+  the value changed).
+- If `$1` is empty, read `boardId` from the Project context block in
+  `specs/decisions.md` and use that.
+- If `$1` is empty AND no boardId is on record, STOP and ask me for the board id
+  once, then record it.
+
+The Project context block lives at the very top of `specs/decisions.md`:
+```md
+# Decisions
+
+## Project context
+- boardId: <24-hex or short id>
+- sprintList: <name or "auto: starts with Sprint">
+
+---
+```
+(Append-only decision entries go below the `---`.)
 
 ## Ground yourself first (every session — you have no memory of previous runs)
 
 Before touching any card:
-1. Read `specs/decisions.md` if it exists — it is the project's decision ledger:
-   answers and choices made in previous refine/impl sessions. Honor them; never
-   re-ask a question it already answers.
-2. Skim the codebase context: `CLAUDE.md` and/or `README.md`, the top-level
-   structure, and any existing `specs/*.md`. Specs must fit THIS codebase, not a
-   hypothetical one.
+1. Read `CLAUDE.md`/`README.md` and skim the top-level structure so specs fit
+   THIS codebase, not a hypothetical one.
+2. For decisions and prior specs, **do not read all of `specs/` yourself** — it
+   may be large. For each card you process, spawn the **`spec-reader`** subagent
+   with a query like "decisions and prior specs relevant to card <short-link>:
+   <card title>". Use what it returns; honor every decision it surfaces and
+   never re-ask a question already answered. (If the project is tiny and `specs/`
+   has only a handful of files, reading them directly is fine.)
 
 Then call `trello_whoami` to learn the current member id, and
-`trello_get_board` for board `$1` to enumerate lists and cards. Filter to cards
+`trello_get_board` for the resolved board id to enumerate lists and cards. Filter to cards
 where the card's list is "Doing" (within the active sprint) AND the current
 member id is in the card's `idMembers`.
 

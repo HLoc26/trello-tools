@@ -14,11 +14,13 @@ Target card: `$1`. Optional spec file: `$2`.
 ## Setup
 
 0. Ground yourself — you have no memory of previous sessions:
-   - Read `specs/decisions.md` if it exists (the project's decision ledger from
-     past refine/impl runs). Honor every entry; never contradict or re-ask what
-     it already answers.
-   - Skim `CLAUDE.md`/`README.md` and the codebase areas the card touches so
+   - Read `CLAUDE.md`/`README.md` and the codebase areas the card touches so
      your changes follow existing patterns.
+   - For decisions and related specs, **don't read all of `specs/` yourself** —
+     it may be large. Spawn the **`spec-reader`** subagent with a query like
+     "decisions and specs relevant to card `$1` and its implementation steps".
+     Honor every decision it surfaces; never contradict or re-ask. (Still read
+     this card's OWN spec file directly — it's one file, see step 2.)
 1. Call `trello_get_card` for `$1` with checklists included. Read the
    description and find the checklist named "Implementation" (if missing, call
    `trello_list_checklists`; if still missing, STOP and tell me to run
