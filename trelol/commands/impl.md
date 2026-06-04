@@ -21,14 +21,20 @@ Target card: `$1`. Optional spec file: `$2`.
      "decisions and specs relevant to card `$1` and its implementation steps".
      Honor every decision it surfaces; never contradict or re-ask. (Still read
      this card's OWN spec file directly — it's one file, see step 2.)
-1. Call `trello_get_card` for `$1` with checklists included. Read the
-   description and find the checklist named "Implementation" (if missing, call
-   `trello_list_checklists`; if still missing, STOP and tell me to run
-   `/trelol:refine` first).
-2. Locate the refined spec: use `$2` if given, otherwise look for
-   `specs/<card-short-link>-*.md` in the working directory. Read it — the
-   Acceptance Criteria and Out-of-scope sections bound your work. If no spec
-   exists, work from the card description alone but say so.
+1. Locate the refined spec FIRST — it holds the real ids so you don't have to
+   fetch the whole board. Use `$2` if given, else find `specs/*.md` whose
+   metadata header `card:`/`cardShortLink:` matches `$1` (or filename slug
+   matches). Read its header to get the **24-hex `card` id**, `board` id, and
+   `checklist` id, plus the Acceptance Criteria / Out-of-scope that bound your
+   work.
+   - The Trello tools need the **24-hex card id**, not a URL slug. If `$1` is
+     already 24-hex, use it. Otherwise use the `card:` id from the spec header.
+     Only if no spec/header exists, fall back to `trello_get_board` to resolve
+     the slug to a real card id (and say the spec is missing — suggest
+     `/trelol:refine`).
+2. Call `trello_get_card` for the resolved 24-hex card id with checklists
+   included; find the "Implementation" checklist (or `trello_list_checklists`).
+   If there's no spec, work from the card description alone but say so.
 3. Note each checklist item's **id** and **state**. Items already `complete` are
    done — skip them (resuming a half-finished card is normal).
 

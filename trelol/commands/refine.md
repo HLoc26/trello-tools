@@ -10,22 +10,25 @@ list whose name starts with "Sprint" if `$2` is empty). The work list is "Doing"
 
 ## Resolve the board (so the user can omit it)
 
-`specs/decisions.md` begins with a "Project context" block that records the
-board. Resolve `<board-id>` in this order:
-- If `$1` is given, use it. Then ensure `specs/decisions.md` exists and its
-  Project context records `boardId: $1` (create the file/block or update it if
-  the value changed).
+The Trello API (via this server) needs the **real 24-hex board id** — the short
+slug in a board URL will be rejected. `specs/decisions.md` records that real id.
+Resolve the board in this order:
+- If `$1` is given and is a 24-hex id, use it.
+- If `$1` is given but NOT 24-hex (e.g. a URL slug or name), call
+  `trello_list_boards` and match it to a board; use that board's real `id`.
 - If `$1` is empty, read `boardId` from the Project context block in
   `specs/decisions.md` and use that.
-- If `$1` is empty AND no boardId is on record, STOP and ask me for the board id
-  once, then record it.
+- If `$1` is empty AND no boardId is on record, STOP and ask me once.
+Once resolved, ensure `specs/decisions.md` exists and its Project context
+records the **24-hex** `boardId` (create/update it).
 
 The Project context block lives at the very top of `specs/decisions.md`:
 ```md
 # Decisions
 
 ## Project context
-- boardId: <24-hex or short id>
+- boardId: <24-hex id — the value tools actually need>
+- boardShortLink: <slug from the URL, human reference only>
 - sprintList: <name or "auto: starts with Sprint">
 
 ---
@@ -65,11 +68,26 @@ For each matching card:
    (b) defer to the PO — make NO Trello change, write a partial spec to
        `specs/<card-short-link>-BLOCKED.md` with the Open Questions section
        filled and the rest stubbed as "TBD — blocked on PO", then move on.
-5. When criteria are clear, Write the spec to `specs/<card-short-link>-<slug>.md`
-   and create a Trello checklist named "Implementation" (`trello_add_checklist`)
-   with one item per implementation step (`trello_add_check_item`). Keep the
-   **item IDs** that `trello_add_check_item` returns — you'll need them to tick
-   items off. (If you lose them, re-read with `trello_list_checklists`.)
+5. When criteria are clear, Write the spec to `specs/<card-short-link>-<slug>.md`.
+   The filename slug is **human reference only** — the API needs real ids, so
+   begin every spec with this metadata header carrying the actual 24-hex ids:
+   ```md
+   ---
+   card: <24-hex card id — what trello tools require>
+   cardShortLink: <slug, human reference only>
+   board: <24-hex board id>
+   checklist: <Implementation checklist id>   # fill after creating it (step below)
+   ---
+   # <card title>
+   ... Summary / Context / Acceptance Criteria / Out of Scope / Open Questions ...
+   ```
+   Get the card's real `id` (24-hex) and short link from the board/card objects
+   you already fetched — do NOT use the filename slug as an id.
+   Then create a Trello checklist named "Implementation" (`trello_add_checklist`)
+   with one item per implementation step (`trello_add_check_item`), and write the
+   returned **checklist id** back into the header's `checklist:` field. Keep the
+   **item IDs** too — you'll need them to tick items off. (If you lose them,
+   re-read with `trello_list_checklists`.)
 6. Never invent acceptance criteria. If a card lacks them, that itself is an
    Open Question.
 

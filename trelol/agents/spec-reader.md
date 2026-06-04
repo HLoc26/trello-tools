@@ -28,7 +28,9 @@ facts that answers it, with sources. You never write or edit anything.
 - **Decisions:** bullet list of applicable ledger entries (date — decision —
   source). If none, say "No relevant decision on record."
 - **Specs:** the relevant spec section(s), quoted or tightly summarized, each
-  with its file path.
+  with its file path. If a spec has a metadata header, include its real ids
+  (`card`, `board`, `checklist` — all 24-hex) so the caller can hit the API
+  without re-resolving them.
 - **Gaps:** anything the query asks about that the specs/ledger do NOT cover, so
   the caller knows it must decide/ask.
 
